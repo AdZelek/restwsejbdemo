@@ -1,28 +1,64 @@
 package com.example.restwsdemo.domain;
 
+import java.util.Collection;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 @XmlRootElement
 @Entity
 	public class Shoe {
 		
-		public Long Id; 
-		public String name;
-		public int size;
-		public double price;
+		private Long Id; 
+		private String name;
+		private int size;
+		private double price;
+		private Barcode barcode;
+		private Shelf shelf;
+		private Collection<Client> clients;
 		
-		public Shoe() {
-			
-		}
+		
+	
+		
 		public Shoe(String name, int size, double price) {
+			super(); 
 			this.name = name;
 			this.size = size;
 			this.price = price;
 		}
+		
+		
+		@OneToOne
+		public Barcode getBarcode() {
+			return barcode;
+		}
+		public void setBarcode(Barcode barcode) {
+			this.barcode = barcode;
+		}
+
+		@ManyToOne
+		public Shelf getShelf() {
+			return shelf;
+		}
+		public void setShelf(Shelf shelf) {
+			this.shelf = shelf;
+		}
+		
+		
+		 @ManyToMany
+		 public Collection<Client> getClients() {
+				return clients;
+			}
+			public void setClients(Collection<Client> clients) {
+				this.clients = clients;
+			}
+
 		@Id
 		@GeneratedValue(strategy =GenerationType.IDENTITY) 
 		public Long getId() {

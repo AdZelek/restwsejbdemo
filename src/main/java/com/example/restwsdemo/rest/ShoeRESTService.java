@@ -36,7 +36,7 @@ public class ShoeRESTService {
 	}
 
 	@GET
-	@Path("/")
+	@Path("/all")
 	@Produces(MediaType.APPLICATION_JSON)
 	@SuppressWarnings("unchecked")
 	public List<Shoe> getAllShoes() {
