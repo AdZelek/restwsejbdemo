@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -21,31 +23,35 @@ import com.example.restwsdemo.service.ShoeManager;
 @Stateless
 public class ShoeRESTService {
 
-	@Inject
-	private ShoeManager pm;
+	
+	@PersistenceContext
+	EntityManager pm;
+	
 
 	@GET
 	@Path("/{shoeId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Shoe getshoe(@PathParam("shoeId") Integer id) {
-		Shoe p = pm.getShoe(id);
-		return p;
+	public Shoe getShoe(@PathParam("shoeId") Long id) {
+		return pm.find(Shoe.class, id);
 	}
 
 	@GET
+	@Path("/")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<Shoe> getshoes() {
-		return pm.getAllShoes();
+	@SuppressWarnings("unchecked")
+	public List<Shoe> getAllShoes() {
+		return pm.createNamedQuery("shoe.getAll").getResultList();
 	}
+
 
 	@POST
+	@Path("/")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response addshoe(Shoe shoe) {
-		pm.addShoe(shoe);
-
-		return Response.status(201).entity("shoe").build();
+	public Response addShoe(Shoe shoe){
+		pm.persist(shoe);
+		return Response.status(201).entity("Shoe").build(); 
 	}
-
+	
 	@GET
 	@Path("/test")
 	@Produces(MediaType.TEXT_PLAIN)
@@ -54,8 +60,8 @@ public class ShoeRESTService {
 	}
 
 	@DELETE
-	public Response clearshoes() {
-		pm.deleteAllShoes();
+	public Response clearPersons(){
+		pm.createNamedQuery("shoe.deleteAll").executeUpdate();
 		return Response.status(200).build();
 	}
 
