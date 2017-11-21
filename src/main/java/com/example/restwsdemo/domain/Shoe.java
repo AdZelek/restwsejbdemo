@@ -24,16 +24,17 @@ import javax.persistence.OneToOne;
 		private Collection<Client> clients;
 		
 		
-	
-		
-		public Shoe(String name, int size, double price) {
-			super(); 
+		public Shoe(String name, int size, double price, Barcode barcode, Shelf shelf, Collection<Client> clients) {
+			super();
 			this.name = name;
 			this.size = size;
 			this.price = price;
+			this.barcode = barcode;
+			this.shelf = shelf;
+			this.clients = clients;
 		}
-		
-		
+
+
 		@OneToOne
 		public Barcode getBarcode() {
 			return barcode;
