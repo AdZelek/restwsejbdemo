@@ -13,10 +13,14 @@ public class Barcode {
 	private long code;
 
 	
-	public Barcode(long id, long code) {
-		super();
+	public Barcode() {
+	}
+
+	public Barcode(long code) {
+		//super();
 		this.code = code;
 	}
+
 	
 	@Id
 	@GeneratedValue(strategy =GenerationType.IDENTITY) 
@@ -32,6 +36,7 @@ public class Barcode {
 	public void setCode(long code) {
 		this.code = code;
 	}
+
 	
 	
 
