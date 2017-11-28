@@ -1,5 +1,6 @@
 package com.example.restwsdemo.rest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -17,6 +18,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.example.restwsdemo.domain.Client;
+import com.example.restwsdemo.domain.Shoe;
 import com.example.restwsdemo.service.BarcodeManager;
 import com.example.restwsdemo.service.ClientManager;
 
@@ -70,5 +72,9 @@ public class ClientRESTService {
 	public void deleteShoe(@PathParam("id") Long id){
 		pm.deleteClient(pm.getClient(id)); 
 	}
+	
+	
+
+	
 
 }

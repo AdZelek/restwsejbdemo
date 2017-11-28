@@ -3,7 +3,9 @@ package com.example.restwsdemo.domain;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -45,7 +47,7 @@ import javax.persistence.OneToOne;
 			this.barcode = barcode;
 		}
 
-		@ManyToOne
+		@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 		public Shelf getShelf() {
 			return shelf;
 		}
@@ -54,7 +56,7 @@ import javax.persistence.OneToOne;
 		}
 		
 		
-		 @ManyToMany
+		 @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 		 public Collection<Client> getClients() {
 				return clients;
 			}
