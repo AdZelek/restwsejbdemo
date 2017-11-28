@@ -1,5 +1,6 @@
 package com.example.restwsdemo.domain;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.persistence.Entity;
@@ -21,11 +22,12 @@ import javax.persistence.OneToOne;
 		private double price;
 		private Barcode barcode;
 		private Shelf shelf;
-		private Collection<Client> clients;
+		private Collection<Client> clients = new ArrayList<>();
 		
+		public Shoe() {};
 		
 		public Shoe(String name, int size, double price, Barcode barcode, Shelf shelf, Collection<Client> clients) {
-			super();
+			//super();
 			this.name = name;
 			this.size = size;
 			this.price = price;

@@ -17,38 +17,40 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.example.restwsdemo.domain.Client;
+import com.example.restwsdemo.service.BarcodeManager;
 import com.example.restwsdemo.service.ClientManager;
 
-@Path("Client")
+@Path("client")
 @Stateless
 public class ClientRESTService {
 
 	
-	@PersistenceContext
-	EntityManager pm;
+	@Inject
+	private ClientManager pm;
 	
 
 	@GET
 	@Path("/{ClientId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Client getClient(@PathParam("ClientId") Long id) {
-		return pm.find(Client.class, id);
+		Client c = pm.getClient(id); 
+		return c; 
 	}
 
-	@GET
-	@Path("/all")
-	@Produces(MediaType.APPLICATION_JSON)
-	@SuppressWarnings("unchecked")
-	public List<Client> getAllClients() {
-		return pm.createNamedQuery("Client.getAll").getResultList();
-	}
+//	@GET
+//	@Path("/all")
+//	@Produces(MediaType.APPLICATION_JSON)
+//	@SuppressWarnings("unchecked")
+//	public List<Client> getAllClients() {
+//		return pm.createNamedQuery("Client.getAll").getResultList();
+//	}
 
 
 	@POST
 	@Path("/")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response addClient(Client client){
-		pm.persist(client);
+		pm.addClient(client);
 		return Response.status(201).entity("Client").build(); 
 	}
 	
@@ -61,8 +63,12 @@ public class ClientRESTService {
 
 	@DELETE
 	public Response clearPersons(){
-		pm.createNamedQuery("Client.deleteAll").executeUpdate();
-		return Response.status(200).build();
+			return Response.status(200).build();
+	}
+	@DELETE
+	@Path("/usun/{id}")
+	public void deleteShoe(@PathParam("id") Long id){
+		pm.deleteClient(pm.getClient(id)); 
 	}
 
 }

@@ -10,12 +10,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import com.example.restwsdemo.domain.Barcode;
+import com.example.restwsdemo.domain.Shoe;
 
 @Stateless
 public class BarcodeManager {
 	
-	
-	//private List<Shoe> db = (new ArrayList<>());
 	
 	@PersistenceContext
 	EntityManager em;
@@ -27,10 +26,6 @@ public class BarcodeManager {
 	public Barcode updateBarcode(Barcode barcode){
 		return em.merge(barcode);
 	}
-	
-//	public Barcode findBarcode(Long Id){
-//		 return em.find(Barcode.class, Id);
-//	}
 	
 	public Barcode getBarcode(Long id) {
 		
@@ -46,4 +41,7 @@ public class BarcodeManager {
 		em.createNamedQuery("barcode.deleteAll").executeUpdate();
 	}
 
+	public void deleteBarcode(Barcode barcode) {
+        em.remove(barcode);
+    }
 }

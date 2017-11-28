@@ -24,31 +24,32 @@ import com.example.restwsdemo.service.ShoeManager;
 public class ShoeRESTService {
 
 	
-	@PersistenceContext
-	EntityManager pm;
+	@Inject
+	private ShoeManager pm;
 	
 
 	@GET
 	@Path("/{shoeId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Shoe getShoe(@PathParam("shoeId") Long id) {
-		return pm.find(Shoe.class, id);
+	public Shoe getShoe(@PathParam("shoeId") Long Id) {
+		Shoe s = pm.getShoe(Id); 
+		return s;
 	}
 
-	@GET
-	@Path("/all")
-	@Produces(MediaType.APPLICATION_JSON)
-	@SuppressWarnings("unchecked")
-	public List<Shoe> getAllShoes() {
-		return pm.createNamedQuery("shoe.getAll").getResultList();
-	}
+//	@GET
+//	@Path("/all")
+//	@Produces(MediaType.APPLICATION_JSON)
+//	@SuppressWarnings("unchecked")
+//	public List<Shoe> getAllShoes() {
+//		return pm.createNamedQuery("shoe.getAll").getResultList();
+//	}
 
 
 	@POST
 	@Path("/")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response addShoe(Shoe shoe){
-		pm.persist(shoe);
+		pm.addShoe(shoe);
 		return Response.status(201).entity("Shoe").build(); 
 	}
 	
@@ -60,9 +61,14 @@ public class ShoeRESTService {
 	}
 
 	@DELETE
-	public Response clearPersons(){
-		pm.createNamedQuery("shoe.deleteAll").executeUpdate();
-		return Response.status(200).build();
+	@Path("/usun/{id}")
+	public void deleteShoe(@PathParam("id") Long id){
+		pm.deleteShoe(pm.getShoe(id)); 
+	}
+	
+	@DELETE
+	public Response clearShoes(){
+			return Response.status(200).build();
 	}
 
 }

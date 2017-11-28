@@ -18,38 +18,39 @@ import javax.ws.rs.core.Response;
 
 import com.example.restwsdemo.domain.Barcode;
 import com.example.restwsdemo.service.BarcodeManager;
+import com.example.restwsdemo.service.ShoeManager;
 
-@Path("Barcode")
+@Path("barcode")
 @Stateless
 public class BarcodeRESTService {
 
 	
-	@PersistenceContext
-	EntityManager pm;
+	@Inject
+	private BarcodeManager pm;
 	
 
 	@GET
 	@Path("/{BarcodeId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Barcode getBarcode(@PathParam("BarcodeId") Long id) {
-		Barcode b = pm.find(Barcode.class, id);
+		Barcode b = pm.getBarcode(id);
 		return b; 
 	}
-
-	@GET
-	@Path("/all")
-	@Produces(MediaType.APPLICATION_JSON)
-	@SuppressWarnings("unchecked")
-	public List<Barcode> getAllBarcodes() {
-		return pm.createNamedQuery("Barcode.getAllBarcodes").getResultList();
-	}
+//
+//	@GET
+//	@Path("/all")
+//	@Produces(MediaType.APPLICATION_JSON)
+//	@SuppressWarnings("unchecked")
+//	public List<Barcode> getAllBarcodes() {
+//		return pm.createNamedQuery("Barcode.getAllBarcodes").getResultList();
+//	}
 
 
 	@POST
 	@Path("/")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response addBarcode(Barcode barcode){
-		pm.persist(barcode);
+		pm.addBarcode(barcode);
 		return Response.status(201).entity("Barcode").build(); 
 	}
 	
@@ -62,8 +63,12 @@ public class BarcodeRESTService {
 
 	@DELETE
 	public Response clearBarcodes(){
-		pm.createNamedQuery("Barcode.deleteAll").executeUpdate();
-		return Response.status(200).build();
+			return Response.status(200).build();
+	}
+	@DELETE
+	@Path("/usun/{id}")
+	public void deleteShoe(@PathParam("id") Long id){
+		pm.deleteBarcode(pm.getBarcode(id)); 
 	}
 
 }

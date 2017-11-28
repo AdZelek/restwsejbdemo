@@ -9,13 +9,12 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import com.example.restwsdemo.domain.Barcode;
 import com.example.restwsdemo.domain.Client;
 
 @Stateless
 public class ClientManager {
 	
-	
-	//private List<Shoe> db = (new ArrayList<>());
 	
 	@PersistenceContext
 	EntityManager em;
@@ -28,13 +27,13 @@ public class ClientManager {
 		return em.merge(client);
 	}
 	
-	public Client findClient(Long Id){
-		 return em.find(Client.class, Id);
-	}
-	
 	public Client getClient(Long id) {
 		return em.find(Client.class, id);
 	}
+	
+	public void deleteClient(Client client) {
+        em.remove(client);
+    }
 	
 	@SuppressWarnings("unchecked")
 	public List<Client> getAllClients(){

@@ -15,8 +15,6 @@ import com.example.restwsdemo.domain.Shoe;
 public class ShoeManager {
 	
 	
-	//private List<Shoe> db = (new ArrayList<>());
-	
 	@PersistenceContext
 	EntityManager em;
 
@@ -28,12 +26,8 @@ public class ShoeManager {
 		return em.merge(shoe);
 	}
 	
-	public Shoe findShoe(Long Id){
-		 return em.find(Shoe.class, Id);
-	}
-	
-	public Shoe getShoe(Long id) {
-		return em.find(Shoe.class, id);
+	public Shoe getShoe(Long Id) {
+		return em.find(Shoe.class, Id);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -41,8 +35,12 @@ public class ShoeManager {
 		return em.createNamedQuery("shoe.getAll").getResultList();
 	}
 	
-	public void deleteAllShoes(){
-		em.createNamedQuery("shoe.deleteAll").executeUpdate();
-	}
+	public void deleteShoe(Shoe shoe) {
+        em.remove(shoe);
+    }
+	
+//	public void deleteAllShoes(){
+//		em.createNamedQuery("shoe.deleteAll").executeUpdate();
+//	}
 
 }

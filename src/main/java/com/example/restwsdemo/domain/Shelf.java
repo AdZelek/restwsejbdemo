@@ -14,8 +14,9 @@ public class Shelf {
 	private int row;
 	private int column;
 	
+	public Shelf() {};
+	
 	public Shelf(int row, int column) {
-		super();
 		this.row = row;
 		this.column = column;
 	}

@@ -17,38 +17,41 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.example.restwsdemo.domain.Shelf;
+import com.example.restwsdemo.service.BarcodeManager;
 import com.example.restwsdemo.service.ShelfManager;
 
-@Path("Shelf")
+@Path("shelf")
 @Stateless
 public class ShelfRESTService {
 
 	
-	@PersistenceContext
-	EntityManager pm;
+
+	@Inject
+	private ShelfManager pm;
 	
 
 	@GET
 	@Path("/{ShelfId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Shelf getShelf(@PathParam("ShelfId") Long id) {
-		return pm.find(Shelf.class, id);
+		Shelf s = pm.getShelf(id);
+		return s; 
 	}
 
-	@GET
-	@Path("/all")
-	@Produces(MediaType.APPLICATION_JSON)
-	@SuppressWarnings("unchecked")
-	public List<Shelf> getAllShelfs() {
-		return pm.createNamedQuery("Shelf.getAll").getResultList();
-	}
+//	@GET
+//	@Path("/all")
+//	@Produces(MediaType.APPLICATION_JSON)
+//	@SuppressWarnings("unchecked")
+//	public List<Shelf> getAllShelfs() {
+//		return pm.createNamedQuery("Shelf.getAll").getResultList();
+//	}
 
 
 	@POST
 	@Path("/")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response addShelf(Shelf shelf){
-		pm.persist(shelf);
+		pm.addShelf(shelf);
 		return Response.status(201).entity("Shelf").build(); 
 	}
 	
@@ -61,8 +64,13 @@ public class ShelfRESTService {
 
 	@DELETE
 	public Response clearPersons(){
-		pm.createNamedQuery("Shelf.deleteAll").executeUpdate();
 		return Response.status(200).build();
+	}
+	
+	@DELETE
+	@Path("/usun/{id}")
+	public void deleteShoe(@PathParam("id") Long id){
+		pm.deleteShelf(pm.getShelf(id)); 
 	}
 
 }

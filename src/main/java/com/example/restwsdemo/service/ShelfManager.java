@@ -9,6 +9,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import com.example.restwsdemo.domain.Barcode;
 import com.example.restwsdemo.domain.Shelf;
 
 @Stateless
@@ -28,21 +29,23 @@ public class ShelfManager {
 		return em.merge(shelf);
 	}
 	
-	public Shelf findShelf(Long Id){
-		 return em.find(Shelf.class, Id);
-	}
-	
 	public Shelf getShelf(Long id) {
 		return em.find(Shelf.class, id);
 	}
 	
-	@SuppressWarnings("unchecked")
-	public List<Shelf> getAllShelfs(){
-		return em.createNamedQuery("Shelf.getAll").getResultList();
-	}
+	public void deleteShelf(Shelf shelf) {
+        em.remove(shelf);
+    }
 	
-	public void deleteAllShelfs(){
-		em.createNamedQuery("Shelf.deleteAll").executeUpdate();
-	}
+//	
+//	
+//	@SuppressWarnings("unchecked")
+//	public List<Shelf> getAllShelfs(){
+//		return em.createNamedQuery("Shelf.getAll").getResultList();
+//	}
+//	
+//	public void deleteAllShelfs(){
+//		em.createNamedQuery("Shelf.deleteAll").executeUpdate();
+//	}
 
 }
