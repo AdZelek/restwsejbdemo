@@ -35,12 +35,23 @@ public class ShoeManager {
 		return em.createNamedQuery("shoe.getAll").getResultList();
 	}
 	
+	
 	public void deleteShoe(Shoe shoe) {
         em.remove(shoe);
     }
 	
-//	public void deleteAllShoes(){
-//		em.createNamedQuery("shoe.deleteAll").executeUpdate();
-//	}
+	@SuppressWarnings("unchecked") 
+	public List<Shoe> findBySize(int size){
+		return em.createNamedQuery("shoe.findBySize").setParameter("size", size).getResultList();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Object[]> getShoeOfClientByNumberCart(int numberCart ){		
+		return em.createNamedQuery("shoeClilent.findByNumberCart").setParameter("numberCart", numberCart).getResultList();
+	}
+	
+	public void deleteAllShoes(){
+		em.createNamedQuery("shoe.deleteAll").executeUpdate();
+	}
 
 }

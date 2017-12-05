@@ -12,10 +12,20 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 
 @XmlRootElement
 @Entity
+@NamedQueries({
+	@NamedQuery(name = "shoe.getAll", query = "Select s from Shoe s"),
+	@NamedQuery(name="shoe.deleteAll", query="Delete from Shoe"),
+	@NamedQuery(name = "shoe.findBySize", query = "Select s from Shoe s where s.size = :size"),
+	@NamedQuery(name = "shoeShelf.findByShelf",
+	query = "Select c.firstName, c.surname, c.numberCart, s.name, s.price from Shoe s JOIN s.clients c where c.numberCart = :numberCart")
+
+})
 	public class Shoe {
 		
 		private Long Id; 
@@ -56,7 +66,7 @@ import javax.persistence.OneToOne;
 		}
 		
 		
-		 @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+		 @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 		 public Collection<Client> getClients() {
 				return clients;
 			}

@@ -6,6 +6,9 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.Consumes;
@@ -18,8 +21,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.example.restejbjpa.domain.Book;
-import com.example.restejbjpa.domain.Person;
 import com.example.restwsdemo.domain.Client;
 import com.example.restwsdemo.domain.Shoe;
 import com.example.restwsdemo.service.ClientManager;
@@ -36,6 +37,10 @@ public class ShoeRESTService {
 	@EJB
 	ClientManager cm;
 	
+	@PersistenceContext
+	EntityManager em;
+	
+	
 
 	@GET
 	@Path("/{shoeId}")
@@ -45,13 +50,14 @@ public class ShoeRESTService {
 		return s;
 	}
 
-//	@GET
-//	@Path("/all")
-//	@Produces(MediaType.APPLICATION_JSON)
-//	@SuppressWarnings("unchecked")
-//	public List<Shoe> getAllShoes() {
-//		return pm.createNamedQuery("shoe.getAll").getResultList();
-//	}
+	@GET
+	@Path("/all")
+	@Produces(MediaType.APPLICATION_JSON)
+	@SuppressWarnings("unchecked")
+	public List<Shoe> getAllShoes() {
+		return em.createNamedQuery("shoe.getAll").getResultList();
+	}
+	
 
 
 	@POST
@@ -77,8 +83,45 @@ public class ShoeRESTService {
 	
 	@DELETE
 	public Response clearShoes(){
-			return Response.status(200).build();
+		em.createNamedQuery("shoe.deleteAll").executeUpdate();
+		return Response.status(200).build();
 	}
+	
+	@GET
+	@Path("/query/size/{size}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<Shoe> getShoe(@PathParam("size") int size){
+		return pm.findBySize(size);
+	}
+	
+	@GET
+	@Path("/query/shoeClients/{cNumberCart}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getBooksAuthor(@PathParam("cNumberCart") int numberCart){
+		
+		List<Object[]> rawClients = pm.getShoeOfClientByNumberCart(numberCart);
+		JsonArrayBuilder clients = Json.createArrayBuilder();
+		
+		for(Object[] rawClient: rawClients){
+			
+			String fName = (String) rawClient[0];
+			String sName = (String) rawClient[1];
+			int NnumberCart = (Integer) rawClient[2];
+			//int yop = (Integer) rawAuthor[3];
+			
+			clients.add(Json.createObjectBuilder()
+					.add("firstName", fName)
+					.add("surname", sName)
+					.add("NnumberCart", title)
+					.add("yop", yop));
+			
+		}
+		
+		JsonObject json =  Json.createObjectBuilder().add("result", authors).build();
+		return Response.ok(json, MediaType.APPLICATION_JSON).build();
+	}
+
+	
 	
 
 	@GET
