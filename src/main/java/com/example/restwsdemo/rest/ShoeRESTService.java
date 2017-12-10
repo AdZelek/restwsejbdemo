@@ -106,18 +106,20 @@ public class ShoeRESTService {
 			
 			String fName = (String) rawClient[0];
 			String sName = (String) rawClient[1];
-			int NnumberCart = (Integer) rawClient[2];
-			//int yop = (Integer) rawAuthor[3];
-			
+			int numberCartC = (Integer) rawClient[2];
+			double priceShoe = (Double) rawClient[4];
+			String nameShoe = (String) rawClient[3];
+			// c.firstName, c.surname, c.numberCart, s.name, s.price
 			clients.add(Json.createObjectBuilder()
 					.add("firstName", fName)
 					.add("surname", sName)
-					.add("NnumberCart", title)
-					.add("yop", yop));
+					.add("numberCart", numberCartC)
+					.add("name",nameShoe)
+					.add("price", priceShoe));
 			
 		}
 		
-		JsonObject json =  Json.createObjectBuilder().add("result", authors).build();
+		JsonObject json =  Json.createObjectBuilder().add("result", clients).build();
 		return Response.ok(json, MediaType.APPLICATION_JSON).build();
 	}
 
@@ -133,23 +135,43 @@ public class ShoeRESTService {
 		Client c2 = new Client();
 		Client c3 = new Client();
 		List<Client> clients = new ArrayList<>(); 
+		List<Client> clients2 = new ArrayList<>(); 
+		
 		
 		c1.setFirstName("Jan");
+		c1.setSurname("Jankowski");
+		c1.setNumberCart(12345);
 		c2.setFirstName("Anna");
+		c2.setSurname("Jankowska");
+		c2.setNumberCart(23456);
 		c3.setFirstName("Adam");
+		c3.setSurname("Adamowski");
+		c3.setNumberCart(123123);
 		clients.add(c1);
 		clients.add(c2);
 		clients.add(c3);
+		clients2.add(c3);
+		clients2.add(c2);
 		
 		cm.addClient(c1);
 		cm.addClient(c2);
 		cm.addClient(c3);
+		
+		
 		Shoe s = new Shoe();
-		s.setName("Adidas");
+		Shoe s2 = new Shoe();
+		s.setName("Nike v120");
+		s.setSize(39);
+		s.setPrice(199.99);
 		s.setClients(clients);
+		s2.setName("Nike m220");
+		s2.setSize(35);
+		s2.setPrice(299.99);
+		s2.setClients(clients2);
 		
 		
 		pm.addShoe(s);
+		pm.addShoe(s2);
 		
 		return Response.status(200).build();
 	}

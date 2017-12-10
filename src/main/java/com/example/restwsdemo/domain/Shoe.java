@@ -22,7 +22,7 @@ import javax.persistence.OneToOne;
 	@NamedQuery(name = "shoe.getAll", query = "Select s from Shoe s"),
 	@NamedQuery(name="shoe.deleteAll", query="Delete from Shoe"),
 	@NamedQuery(name = "shoe.findBySize", query = "Select s from Shoe s where s.size = :size"),
-	@NamedQuery(name = "shoeShelf.findByShelf",
+	@NamedQuery(name = "shoeClilent.findByNumberCart",
 	query = "Select c.firstName, c.surname, c.numberCart, s.name, s.price from Shoe s JOIN s.clients c where c.numberCart = :numberCart")
 
 })
