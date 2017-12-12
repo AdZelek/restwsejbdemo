@@ -21,7 +21,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.example.restejbjpa.domain.Car;
+import com.example.restejbjpa.domain.Person;
 import com.example.restwsdemo.domain.Client;
+import com.example.restwsdemo.domain.Shelf;
 import com.example.restwsdemo.domain.Shoe;
 import com.example.restwsdemo.service.ClientManager;
 import com.example.restwsdemo.service.ShoeManager;
@@ -174,6 +177,50 @@ public class ShoeRESTService {
 		pm.addShoe(s2);
 		
 		return Response.status(200).build();
+	}
+	
+
+	@GET
+	@Path("/manytoone")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String testRelations(){
+		
+		Shoe s = new Shoe();
+		Shoe s2 = new Shoe();
+		s.setName("Nike v120");
+		s.setSize(39);
+		s.setPrice(199.99);
+		s2.setName("Nike m220");
+		s2.setSize(35);
+		
+		
+		Shelf sh1 = new Shelf();
+		Shelf sh2= new Shelf();
+		sh1.setColumn(1);
+		sh1.setRow(2); 
+		sh2.setColumn(10);
+		sh2.setRow(20); 
+
+		List<Shoe> shoes = new ArrayList<>();
+		shoes.add(s);
+		shoes.add(s2);
+		
+		// rozwiazanie zbudowac nowa budowe dla kazdego samochodu z listy dodoajemy this wlasciciela
+		// p.addCars(cars);		
+		pm.addShoe(s);
+		
+//	
+//		System.out.println("Id c: " + c1.getId());
+//		
+//		System.out.println("\n\n@@@ Size of owners: " + c1.getOwners().size());
+//		
+		//Car retrieved = pm.getCar(c1.getId());
+		//Car retrieved = pm.updateCar(c1);
+		
+		
+		//System.out.println("\n\n@@@ Size of owners: " + retrieved.getOwners().size());
+
+		return "ManyToMany";
 	}
 	
 

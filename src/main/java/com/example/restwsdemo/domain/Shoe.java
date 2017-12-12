@@ -57,6 +57,7 @@ import javax.persistence.OneToOne;
 			this.barcode = barcode;
 		}
 
+		//(mappedBy = "cars", fetch = FetchType.EAGER)
 		@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 		public Shelf getShelf() {
 			return shelf;
