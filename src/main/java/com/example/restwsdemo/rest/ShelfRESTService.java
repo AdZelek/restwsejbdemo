@@ -1,11 +1,10 @@
 package com.example.restwsdemo.rest;
 
+
 import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -17,7 +16,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.example.restwsdemo.domain.Shelf;
-import com.example.restwsdemo.service.BarcodeManager;
 import com.example.restwsdemo.service.ShelfManager;
 
 @Path("shelf")
@@ -27,31 +25,30 @@ public class ShelfRESTService {
 	
 
 	@Inject
-	private ShelfManager pm;
+	private ShelfManager sm;
 	
 
 	@GET
 	@Path("/{ShelfId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Shelf getShelf(@PathParam("ShelfId") Long id) {
-		Shelf s = pm.getShelf(id);
+		Shelf s = sm.getShelf(id);
 		return s; 
 	}
 
-//	@GET
-//	@Path("/all")
-//	@Produces(MediaType.APPLICATION_JSON)
-//	@SuppressWarnings("unchecked")
-//	public List<Shelf> getAllShelfs() {
-//		return pm.createNamedQuery("Shelf.getAll").getResultList();
-//	}
+	@GET
+	@Path("/all")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<Shelf> getAllShelfs() {
+		return sm.getAllShelfs();
+	}
 
 
 	@POST
 	@Path("/")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response addShelf(Shelf shelf){
-		pm.addShelf(shelf);
+		sm.addShelf(shelf);
 		return Response.status(201).entity("Shelf").build(); 
 	}
 	
@@ -70,7 +67,7 @@ public class ShelfRESTService {
 	@DELETE
 	@Path("/usun/{id}")
 	public void deleteShoe(@PathParam("id") Long id){
-		pm.deleteShelf(pm.getShelf(id)); 
+		sm.deleteShelf(sm.getShelf(id)); 
 	}
 
 }

@@ -28,18 +28,21 @@ import javax.persistence.OneToOne;
 })
 	public class Shoe {
 		
-		private Long Id; 
+		private Long id; 
 		private String name;
-		private int size;
+		private Integer size;
 		private double price;
 		private Barcode barcode;
-		private Shelf shelf;
+		
+		
 		private Collection<Client> clients = new ArrayList<>();
+		
+		
+		private Shelf shelf;
 		
 		public Shoe() {};
 		
-		public Shoe(String name, int size, double price, Barcode barcode, Shelf shelf, Collection<Client> clients) {
-			//super();
+		public Shoe(String name, Integer size, double price, Barcode barcode, Shelf shelf, Collection<Client> clients) {
 			this.name = name;
 			this.size = size;
 			this.price = price;
@@ -57,18 +60,8 @@ import javax.persistence.OneToOne;
 			this.barcode = barcode;
 		}
 
-		//(mappedBy = "cars", fetch = FetchType.EAGER)
-		@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-		public Shelf getShelf() {
-			return shelf;
-		}
-		public void setShelf(Shelf shelf) {
-			this.shelf = shelf;
-		}
-		
-		
-		 @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-		 public Collection<Client> getClients() {
+		@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+		public Collection<Client> getClients() {
 				return clients;
 			}
 			public void setClients(Collection<Client> clients) {
@@ -76,12 +69,12 @@ import javax.persistence.OneToOne;
 			}
 
 		@Id
-		@GeneratedValue(strategy =GenerationType.IDENTITY) 
+		@GeneratedValue(strategy = GenerationType.IDENTITY) 
 		public Long getId() {
-			return Id;
+			return id;
 		}
 		public void setId(Long id) {
-			Id = id;
+			this.id = id;
 		}
 		public double getPrice() {
 			return price;
@@ -89,10 +82,10 @@ import javax.persistence.OneToOne;
 		public void setPrice(double price) {
 			this.price = price;
 		}
-		public int getSize() {
+		public Integer getSize() {
 			return size;
 		}
-		public void setSize(int size) {
+		public void setSize(Integer size) {
 			this.size = size;
 		}
 		public String getName() {
@@ -101,5 +94,12 @@ import javax.persistence.OneToOne;
 		public void setName(String name) {
 			this.name = name;
 		}
-		
+	
+		@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+		public Shelf getShelf() {
+			return shelf;
+		}
+		public void setShelf(Shelf shelf) {
+			this.shelf = shelf;
+		}
 	}

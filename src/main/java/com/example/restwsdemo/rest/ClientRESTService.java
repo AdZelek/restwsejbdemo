@@ -1,6 +1,7 @@
 package com.example.restwsdemo.rest;
 
-import java.util.ArrayList;
+
+
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -18,8 +19,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.example.restwsdemo.domain.Client;
-import com.example.restwsdemo.domain.Shoe;
-import com.example.restwsdemo.service.BarcodeManager;
 import com.example.restwsdemo.service.ClientManager;
 
 @Path("client")
@@ -28,7 +27,11 @@ public class ClientRESTService {
 
 	
 	@Inject
-	private ClientManager pm;
+    ClientManager pm;
+	
+	@PersistenceContext
+	EntityManager em;
+	
 	
 
 	@GET
@@ -39,13 +42,13 @@ public class ClientRESTService {
 		return c; 
 	}
 
-//	@GET
-//	@Path("/all")
-//	@Produces(MediaType.APPLICATION_JSON)
-//	@SuppressWarnings("unchecked")
-//	public List<Client> getAllClients() {
-//		return pm.createNamedQuery("Client.getAll").getResultList();
-//	}
+	@GET
+	@Path("/all")
+	@Produces(MediaType.APPLICATION_JSON)
+	@SuppressWarnings("unchecked")
+	public List<Client> getAllClients() {
+		return em.createNamedQuery("Client.getAll").getResultList();
+	}
 
 
 	@POST

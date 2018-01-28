@@ -4,8 +4,6 @@ import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -18,7 +16,6 @@ import javax.ws.rs.core.Response;
 
 import com.example.restwsdemo.domain.Barcode;
 import com.example.restwsdemo.service.BarcodeManager;
-import com.example.restwsdemo.service.ShoeManager;
 
 @Path("barcode")
 @Stateless
@@ -26,31 +23,23 @@ public class BarcodeRESTService {
 
 	
 	@Inject
-	private BarcodeManager pm;
+	private BarcodeManager bm;
 	
 
 	@GET
 	@Path("/{BarcodeId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Barcode getBarcode(@PathParam("BarcodeId") Long id) {
-		Barcode b = pm.getBarcode(id);
+		Barcode b = bm.getBarcode(id);
 		return b; 
 	}
-//
-//	@GET
-//	@Path("/all")
-//	@Produces(MediaType.APPLICATION_JSON)
-//	@SuppressWarnings("unchecked")
-//	public List<Barcode> getAllBarcodes() {
-//		return pm.createNamedQuery("Barcode.getAllBarcodes").getResultList();
-//	}
 
 
 	@POST
 	@Path("/")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response addBarcode(Barcode barcode){
-		pm.addBarcode(barcode);
+		bm.addBarcode(barcode);
 		return Response.status(201).entity("Barcode").build(); 
 	}
 	
@@ -68,7 +57,7 @@ public class BarcodeRESTService {
 	@DELETE
 	@Path("/usun/{id}")
 	public void deleteShoe(@PathParam("id") Long id){
-		pm.deleteBarcode(pm.getBarcode(id)); 
+		bm.deleteBarcode(bm.getBarcode(id)); 
 	}
 
 }

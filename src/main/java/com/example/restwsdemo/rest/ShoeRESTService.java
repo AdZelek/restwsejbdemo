@@ -5,14 +5,12 @@ import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.inject.Inject;
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+//import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -21,12 +19,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.example.restejbjpa.domain.Car;
-import com.example.restejbjpa.domain.Person;
 import com.example.restwsdemo.domain.Client;
 import com.example.restwsdemo.domain.Shelf;
 import com.example.restwsdemo.domain.Shoe;
 import com.example.restwsdemo.service.ClientManager;
+import com.example.restwsdemo.service.ShelfManager;
 import com.example.restwsdemo.service.ShoeManager;
 
 @Path("shoe")
@@ -35,39 +32,37 @@ public class ShoeRESTService {
 
 	
 	@EJB
-	ShoeManager pm;
+	ShoeManager sm;
 	
 	@EJB
 	ClientManager cm;
 	
-	@PersistenceContext
-	EntityManager em;
+	@EJB
+	ShelfManager shm;
 	
-	
+
 
 	@GET
 	@Path("/{shoeId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Shoe getShoe(@PathParam("shoeId") Long Id) {
-		Shoe s = pm.getShoe(Id); 
+	public Shoe getShoe(@PathParam("shoeId") Long id) {
+		Shoe s = sm.getShoe(id); 
 		return s;
 	}
 
 	@GET
 	@Path("/all")
 	@Produces(MediaType.APPLICATION_JSON)
-	@SuppressWarnings("unchecked")
 	public List<Shoe> getAllShoes() {
-		return em.createNamedQuery("shoe.getAll").getResultList();
+		return sm.getAllShoes(); 
+				
 	}
 	
-
-
 	@POST
 	@Path("/")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response addShoe(Shoe shoe){
-		pm.addShoe(shoe);
+		sm.addShoe(shoe);
 		return Response.status(201).entity("Shoe").build(); 
 	}
 	
@@ -78,31 +73,35 @@ public class ShoeRESTService {
 		return "REST API /shoe is running today!";
 	}
 
+	@Path("/delete/{id}")
 	@DELETE
-	@Path("/usun/{id}")
 	public void deleteShoe(@PathParam("id") Long id){
-		pm.deleteShoe(pm.getShoe(id)); 
+	  sm.deleteShoe(id); 
+	 // Response.status(200).entity(response).header("Access-Control-Allow-Origin", "*").build();
 	}
 	
 	@DELETE
+	@Path("/deleteAll")
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response clearShoes(){
-		em.createNamedQuery("shoe.deleteAll").executeUpdate();
-		return Response.status(200).build();
+		sm.deleteAllShoes();
+		//em.createNamedQuery("shoe.deleteAll").executeUpdate();
+	return Response.status(200).build();
 	}
 	
 	@GET
 	@Path("/query/size/{size}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Shoe> getShoe(@PathParam("size") int size){
-		return pm.findBySize(size);
+		return sm.findBySize(size);
 	}
 	
 	@GET
 	@Path("/query/shoeClients/{cNumberCart}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getBooksAuthor(@PathParam("cNumberCart") int numberCart){
+	public Response getShoeClients(@PathParam("cNumberCart") int numberCart){
 		
-		List<Object[]> rawClients = pm.getShoeOfClientByNumberCart(numberCart);
+		List<Object[]> rawClients = sm.getShoeOfClientByNumberCart(numberCart);
 		JsonArrayBuilder clients = Json.createArrayBuilder();
 		
 		for(Object[] rawClient: rawClients){
@@ -112,7 +111,7 @@ public class ShoeRESTService {
 			int numberCartC = (Integer) rawClient[2];
 			double priceShoe = (Double) rawClient[4];
 			String nameShoe = (String) rawClient[3];
-			// c.firstName, c.surname, c.numberCart, s.name, s.price
+	
 			clients.add(Json.createObjectBuilder()
 					.add("firstName", fName)
 					.add("surname", sName)
@@ -127,10 +126,8 @@ public class ShoeRESTService {
 	}
 
 	
-	
-
 	@GET
-	@Path("/dodajC")
+	@Path("/addClients")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response addShoeNew() {
 		
@@ -172,9 +169,8 @@ public class ShoeRESTService {
 		s2.setPrice(299.99);
 		s2.setClients(clients2);
 		
-		
-		pm.addShoe(s);
-		pm.addShoe(s2);
+		sm.addShoe(s);
+		sm.addShoe(s2);
 		
 		return Response.status(200).build();
 	}
@@ -193,35 +189,49 @@ public class ShoeRESTService {
 		s2.setName("Nike m220");
 		s2.setSize(35);
 		
-		
 		Shelf sh1 = new Shelf();
 		Shelf sh2= new Shelf();
 		sh1.setColumn(1);
 		sh1.setRow(2); 
 		sh2.setColumn(10);
-		sh2.setRow(20); 
-
+		sh2.setRow(20);
+		
 		List<Shoe> shoes = new ArrayList<>();
 		shoes.add(s);
 		shoes.add(s2);
 		
-		// rozwiazanie zbudowac nowa budowe dla kazdego samochodu z listy dodoajemy this wlasciciela
-		// p.addCars(cars);		
-		pm.addShoe(s);
-		
-//	
-//		System.out.println("Id c: " + c1.getId());
-//		
-//		System.out.println("\n\n@@@ Size of owners: " + c1.getOwners().size());
-//		
-		//Car retrieved = pm.getCar(c1.getId());
-		//Car retrieved = pm.updateCar(c1);
-		
-		
-		//System.out.println("\n\n@@@ Size of owners: " + retrieved.getOwners().size());
-
-		return "ManyToMany";
-	}
+		s.setShelf(sh1);
+		s2.setShelf(sh1);
 	
+		sm.addShoe(s);
+		sm.addShoe(s2);
+		
+		sh1.addShoe(s);
+		sh1.addShoe(s2);
+		shm.addShelf(sh1);
+		//shm.addShelf(sh2);
+	
+		return "ManyToOne";
+	}
+	@GET
+	@Path("/lazy/{id}")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String getShoeLazy(@PathParam("id") Long id){
+		Shoe s = sm.getShoe(id);
+		if (s==null) return ("empty");
+		else if(s.getShelf()==null) return (" Name:" +s.getName()+"\n Shelf: empty\n");
+		else return(" Name:" +s.getName()+"\n Shelf \n"
+					+ " Column:" + s.getShelf().getColumn()+ " Row:"+ s.getShelf().getRow());
+	}
+
+	
+	
+	
+	@GET
+	@Path("/ltPrice/{price}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<Shoe> getShoeByPrice(@PathParam("price") Double price){
+		return sm.getByPrice(price);
+	}
 
 }

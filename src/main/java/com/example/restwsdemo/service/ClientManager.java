@@ -1,15 +1,11 @@
 package com.example.restwsdemo.service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
-import javax.ejb.Singleton;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import com.example.restwsdemo.domain.Barcode;
 import com.example.restwsdemo.domain.Client;
 
 @Stateless
